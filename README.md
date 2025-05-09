@@ -20,7 +20,7 @@ A web application that allows users to upload PDF documents, ask questions about
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/bigbrainw/pdf_tools.git
 cd pdf_tool
 ```
 
