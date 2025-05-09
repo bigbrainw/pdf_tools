@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PDF Highlighter with Text Layer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #pdf-container { position: relative; }
+    .pdf-page { margin-bottom: 40px; position: relative; }
+    canvas { border: 1px solid #ccc; display: block; z-index: 0; }
+    .textLayer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      white-space: pre;
+      color: transparent;
+      z-index: 1;
+    }
+    .textLayer span {
+      display: inline;
+      line-height: 1;
+      transform-origin: 0 0;
+    }
+    .textLayer span.highlight {
+      color: black;
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <h1>Live PDF Highlighter</h1>
+  <form id="upload-form">
+    <input type="file" id="pdf-file" accept="application/pdf" required />
+    <input type="text" id="query" placeholder="Enter your question" required />
+    <button type="submit">Submit</button>
+  </form>
+  <p id="status"></p>
+  <div id="pdf-container"></div>
+
+  <script>
+    const form = document.getElementById("upload-form");
+    const container = document.getElementById("pdf-container");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const file = document.getElementById("pdf-file").files[0];
+      const query = document.getElementById("query").value;
+
+      if (!file || !query) return alert("PDF and query required");
+
+      const formData = new FormData();
+      formData.append("pdf", file);
+      formData.append("query", query);
+
+      status.textContent = "Querying and loading highlights...";
+
+      try {
+        const res = await fetch("http://localhost:5000/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        renderPDF(url, query);
+        status.textContent = "Done. Hover to inspect highlighted text.";
+      } catch (err) {
+        status.textContent = "Error: " + err.message;
+      }
+    });
+
+    async function renderPDF(url, keyword) {
+      container.innerHTML = "";
+      const pdf = await pdfjsLib.getDocument(url).promise;
+
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const scale = 1.5;
+        const viewport = page.getViewport({ scale });
+
+        const pageContainer = document.createElement("div");
+        pageContainer.className = "pdf-page";
+
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        pageContainer.appendChild(canvas);
+
+        const textLayerDiv = document.createElement("div");
+        textLayerDiv.className = "textLayer";
+        textLayerDiv.style.height = `${viewport.height}px`;
+        textLayerDiv.style.width = `${viewport.width}px`;
+        pageContainer.appendChild(textLayerDiv);
+
+        container.appendChild(pageContainer);
+
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        const textContent = await page.getTextContent();
+        await pdfjsLib.renderTextLayer({
+          textContent,
+          container: textLayerDiv,
+          viewport,
+          textDivs: []
+        });
+
+        highlightExactMatches(textLayerDiv, keyword);
+      }
+    }
+
+    function highlightExactMatches(layer, query) {
+      if (!query) return;
+      const keyword = query.trim().toLowerCase();
+      const spans = layer.querySelectorAll("span");
+      spans.forEach(span => {
+        const text = span.textContent.trim().toLowerCase();
+        if (text.includes(keyword)) {
+          span.classList.add("highlight");
+        }
+      });
+    }
+  </script>
+</body>
+</html>
