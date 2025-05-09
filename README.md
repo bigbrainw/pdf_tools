@@ -67,28 +67,70 @@ python app.py
 
 ## License
 
-MIT License
-
-Copyright (c) 2024 Bigbrainw
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
-[Add contribution guidelines here] 
+Contributions are welcome! Here's how you can help:
+
+1. **Fork the Repository**
+   - Click the 'Fork' button on the repository page
+   - Clone your fork locally
+
+2. **Create a Feature Branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make Your Changes**
+   - Write clear, descriptive commit messages
+   - Follow the existing code style
+   - Add tests if applicable
+   - Update documentation as needed
+
+4. **Submit a Pull Request**
+   - Push your changes to your fork
+   - Create a pull request against the main branch
+   - Describe your changes and their purpose
+   - Reference any related issues
+
+### Development Setup
+
+1. Install development dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Set up your environment:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your API keys
+   ```
+
+3. Run tests (if available):
+   ```bash
+   python -m pytest
+   ```
+
+### Code Style
+
+- Follow PEP 8 guidelines for Python code
+- Use meaningful variable and function names
+- Add comments for complex logic
+- Keep functions focused and single-purpose
+
+### Reporting Issues
+
+When reporting issues, please include:
+- A clear description of the problem
+- Steps to reproduce the issue
+- Expected vs actual behavior
+- Any relevant error messages
+- Your environment details (OS, Python version, etc.)
+
+### Feature Requests
+
+We welcome feature requests! When suggesting new features:
+- Explain the problem you're trying to solve
+- Describe your proposed solution
+- Consider potential impacts on existing functionality 
